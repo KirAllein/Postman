@@ -17,6 +17,7 @@ def templates(request):
 @login_required
 def template_create(request):
     letter = None
+    title = None
 
     if request.method == 'POST':
         form = TemplateForm(request.POST)
@@ -30,6 +31,7 @@ def template_create(request):
                         vacancy = vacancy.first()
                     if vacancy:
                         letter = generation_letter(vacancy.title, vacancy.description)
+                        title = vacancy.title
                         print(letter)
             elif action == 'save':
                 template = form.save(commit=False) # сразу не сохраняем в бд
@@ -41,7 +43,8 @@ def template_create(request):
     else:
         form = TemplateForm()
 
-    return render(request, 'templates/template_create.html', {'form': form, 'generated_text': letter})
+    return render(request, 'templates/template_create.html', {'form': form, 'generated_text': letter,
+                                                              'vacancy_title': title})
 
 
 # редактирование шаблона письма

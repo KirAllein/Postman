@@ -12,7 +12,7 @@
     <!-- Поле title -->
     <div class="form-group" style="margin-bottom: 15px;">
         <label for="{{ form.title.id_for_label }}">Название письма</label><br>
-        {{ form.title }}
+        <input type="text" name="title" id="{{ form.title.id_for_label }}" value="{{ vacancy_title|default_if_none:'' }}">
         {% if form.title.errors %}
             <div class="error">{{ form.title.errors }}</div>
         {% endif %}
