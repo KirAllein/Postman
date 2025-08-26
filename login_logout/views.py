@@ -3,6 +3,8 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from .forms import UserLoginForm
 
+# комментарий для теста
+
 
 # Вход пользователя
 def user_login(request):
