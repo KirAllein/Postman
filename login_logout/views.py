@@ -3,7 +3,9 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from .forms import UserLoginForm
 
-# комментарий для теста
+# комментарий
+
+# Езе один тест тест
 
 
 # Вход пользователя
