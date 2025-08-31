@@ -13,7 +13,7 @@ from .emails import send_email_to_candidate
 # список вакансий
 @login_required
 def vacancies(request):
-    vacancies = Vacancy.objects.filter(user=request.user)
+    vacancies = Vacancy.objects.filter(user_company=request.user.company)
     return render(request, 'vacancies/vacancies.html', {'vacancies': vacancies})
 
 
@@ -25,6 +25,7 @@ def vacancy_create(request):
         if form.is_valid():
             vacancy = form.save(commit=False)
             vacancy.user = request.user
+            vacancy.user_company = request.user.company
             vacancy.save()
             form.save_m2m()
             return redirect('vacancies')

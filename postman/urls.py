@@ -29,6 +29,7 @@ urlpatterns = [
     path('candidates/', include('candidates.urls')),
     path('vacancies/', include('vacancies.urls')),
     path('templates/', include('templates.urls')),
+    path('blackjack/', include('blackjack.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

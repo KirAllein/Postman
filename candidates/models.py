@@ -34,6 +34,8 @@ class Candidate(models.Model):
         verbose_name='Статус'
     )
     notes = models.TextField(blank=True)
+    user_company = models.CharField(max_length=150)
+
 
     class Meta:
         verbose_name = 'Кандидат'

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'candidates',
     'vacancies',
     'templates',
+    'blackjack',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

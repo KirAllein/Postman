@@ -6,6 +6,7 @@ from django.db import models
 class User(AbstractUser):
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
+    company = models.CharField(max_length=150)
 
     class Meta:
         verbose_name = 'Пользователь'

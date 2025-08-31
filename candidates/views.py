@@ -25,7 +25,9 @@ def candidate_create(request):
     if request.method == 'POST':
         form = CandidateForm(request.POST, request.FILES)
         if form.is_valid():
-            candidate = form.save()
+            candidate = form.save(commit=False)
+            candidate.user_company = request.user.company
+            candidate.save()
             # Обновим связанные вакансии вручную
             candidate.vacancies.clear()  # Убираем все старые связи
             for vacancy in form.cleaned_data['vacancies']:

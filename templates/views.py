@@ -9,7 +9,7 @@ from .YandexGPT import generation_letter
 # шаблоны писем кандидатам
 @login_required
 def templates(request):
-    templates = Template.objects.all()
+    templates = Template.objects.filter(user_company=request.user.company)
     return render(request, 'templates/templates.html', {'templates': templates})
 
 
@@ -35,6 +35,7 @@ def template_create(request):
                         print(letter)
             elif action == 'save':
                 template = form.save(commit=False) # сразу не сохраняем в бд
+                template.user_company = request.user.company
                 if letter:
                     template.content = letter
                 template.save()

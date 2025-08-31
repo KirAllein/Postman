@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib import messages
-from .forms import UserLoginForm
-
-# комментарий
-
-# Езе один тест тест
+from django.contrib.auth.views import PasswordChangeView
+from .forms import UserLoginForm, UserPasswordChangeForm
+from django.urls import reverse_lazy
 
 
 # Вход пользователя
@@ -27,4 +25,10 @@ def user_logout(request):
     logout(request)
     messages.info(request, 'Вы вышли из аккаунта.')
     return redirect('login')
+
+
+class UserPasswordChange(PasswordChangeView):
+    form_class = UserPasswordChangeForm
+    success_url = reverse_lazy("login_logout:password_change_done")
+    template_name = "login_logout/password_change_form.html"
 
