@@ -1,0 +1,231 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Блэкджек — Postman{% endblock %}
+
+{% block content %}
+<div class="blackjack-container mt-5">
+    <h1 class="mb-4 text-gradient">🃏 Игра в Блэкджек</h1>
+
+    <div id="game-area" class="card p-4 shadow-lg bg-glass">
+        <div class="mb-4">
+            <h4>Карты дилера</h4>
+            <div id="dealer-hand" class="cards-area"></div>
+            <p id="dealer-value" class="mt-2 text-muted"></p>
+        </div>
+
+        <hr>
+
+        <div class="mb-4">
+            <h4>Ваши карты</h4>
+            <div id="player-hand" class="cards-area"></div>
+            <p id="player-value" class="mt-2 text-muted"></p>
+        </div>
+
+        <div id="message" class="alert alert-info mt-3 d-none"></div>
+
+        <div class="mt-4">
+            <button id="start-btn" class="btn btn-primary me-2"><i class="fas fa-play"></i> Новая игра</button>
+            <button id="hit-btn" class="btn btn-success me-2" disabled><i class="fas fa-hand-paper"></i> Взять</button>
+            <button id="stand-btn" class="btn btn-warning" disabled><i class="fas fa-stop"></i> Хватит</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.blackjack-container {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px 20px;
+    background: radial-gradient(circle at center, #084c2e 0%, #033d23 80%);
+    border: 3px solid #ffd700;
+    border-radius: 18px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.bg-glass {
+    background: none;
+    padding: 0;
+}
+
+h1.text-gradient {
+    font-size: 2rem;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    margin-bottom: 20px;
+}
+
+.cards-area {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 80px;
+    margin: 10px 0 20px 0;
+}
+
+.card-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 10px;
+    width: 75px;         /* шире */
+    height: 110px;       /* выше для соотношения карты */
+    text-align: center;
+    background: #fff;
+    color: #111;
+    border: 2px solid #ccc;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    line-height: 1;
+    letter-spacing: 1px; /* чтобы символы выглядели ровнее */
+}
+
+.card-symbol.red { color: #e63946; }
+.card-symbol.black { color: #1d3557; }
+
+.card-symbol:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+}
+
+.alert {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid #ffd700;
+    border-radius: 8px;
+}
+
+button.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-outline-primary {
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+.btn-outline-primary:hover {
+    background-color: #ffd700;
+    color: #084c2e;
+}
+
+.text-muted {
+    color: #eee !important;
+}
+
+@media (max-width: 768px) {
+    .blackjack-container {
+        max-width: 100%;
+        padding: 15px;
+    }
+    .card-symbol {
+        font-size: 1.8rem;
+        width: 50px;
+    }
+}
+</style>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const dealerHand = document.getElementById("dealer-hand");
+    const playerHand = document.getElementById("player-hand");
+    const dealerValue = document.getElementById("dealer-value");
+    const playerValue = document.getElementById("player-value");
+    const messageBox = document.getElementById("message");
+
+    const startBtn = document.getElementById("start-btn");
+    const hitBtn = document.getElementById("hit-btn");
+    const standBtn = document.getElementById("stand-btn");
+
+    const urls = {
+        start: "{% url 'blackjack_start' %}",
+        hit: "{% url 'blackjack_hit' %}",
+        stand: "{% url 'blackjack_stand' %}"
+    };
+
+    const csrftoken = getCookie('csrftoken');
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    async function post(url) {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: { "X-CSRFToken": csrftoken }
+        });
+        return await res.json();
+    }
+
+    function renderCard(card) {
+        if (!card || card === "🂠") {
+            return `<div class="card-symbol">🂠</div>`;
+        }
+        const suit = card.slice(-1);
+        const color = (suit === '♥' || suit === '♦') ? 'red' : 'black';
+        return `<div class="card-symbol ${color}">${card}</div>`;
+    }
+
+    function updateUI(data) {
+        dealerHand.innerHTML = data.dealer_hand.map(renderCard).join('');
+        playerHand.innerHTML = data.player_hand.map(renderCard).join('');
+
+        dealerValue.textContent = data.dealer_value !== null ? `Очки дилера: ${data.dealer_value}` : 'Очки дилера: ?';
+        playerValue.textContent = `Ваши очки: ${data.player_value}`;
+
+        if (data.message) {
+            messageBox.textContent = data.message;
+            messageBox.classList.remove("d-none");
+        } else {
+            messageBox.classList.add("d-none");
+        }
+
+        if (data.status === "playing") {
+            hitBtn.disabled = false;
+            standBtn.disabled = false;
+        } else {
+            hitBtn.disabled = true;
+            standBtn.disabled = true;
+        }
+    }
+
+    startBtn.addEventListener("click", async () => {
+        const data = await post(urls.start);
+        updateUI(data);
+    });
+
+    hitBtn.addEventListener("click", async () => {
+        const data = await post(urls.hit);
+        updateUI(data);
+    });
+
+    standBtn.addEventListener("click", async () => {
+        const data = await post(urls.stand);
+        updateUI(data);
+    });
+});
+</script>
+{% endblock %}
