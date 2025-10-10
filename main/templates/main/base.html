@@ -1,90 +1,99 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Postman{% endblock %}</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'main/css/main.css' %}?v=1">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}?v=3">
 </head>
-<body>
+<body class="light-mode">
 
-<!-- Навигация -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary shadow-sm custom-navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold px-3 py-2 bg-light text-primary rounded-pill" href="{% url 'index' %}" style="font-weight: bold; font-size: 1.2rem;">
-            📬 Postman
+<!-- ===== Navbar ===== -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm custom-navbar py-3">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'index' %}">
+            <span class="logo-circle me-2">📬</span> <span>Postman</span>
         </a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         {% if user.is_authenticated %}
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav text-center">
-                <li class="nav-item">
-                    <a class="nav-link nav-effect text-white" href="{% url 'vacancies' %}"><i class="fas fa-briefcase"></i> Вакансии</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-effect text-white" href="{% url 'candidates' %}"><i class="fas fa-users"></i> Кандидаты</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-effect text-white" href="{% url 'templates' %}"><i class="fas fa-envelope"></i> Шаблоны писем</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-effect text-white" href="{% url 'about' %}"><i class="fas fa-info-circle"></i> О нас</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-effect text-white" href="#"><i class="fa-solid fa-diamond"></i> Блэкджек</a>
-                </li>
+            <ul class="navbar-nav text-center gap-2">
+                <li class="nav-item"><a class="nav-link" href="{% url 'vacancies' %}"><i class="fa-solid fa-briefcase"></i> Вакансии</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'candidates' %}"><i class="fa-solid fa-users"></i> Кандидаты</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'templates' %}"><i class="fa-solid fa-envelope-open-text"></i> Шаблоны</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}"><i class="fa-solid fa-circle-info"></i> О нас</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'blackjack_page' %}"><i class="fa-solid fa-diamond"></i> Блэкджек</a></li>
             </ul>
         </div>
         {% endif %}
 
-        <div class="navbar-nav ms-auto">
+        <div class="d-flex align-items-center ms-auto gap-2">
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}" class="nav-link nav-effect text-white"><i class="fas fa-user"></i> {{ user.username }}</a>
-                <a href="{% url 'logout' %}" class="nav-link nav-effect text-white"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-user"></i> {{ user.username }}</a>
+                <a href="{% url 'logout' %}" class="btn btn-light btn-sm text-primary fw-bold"><i class="fa-solid fa-right-from-bracket"></i> Выйти</a>
             {% else %}
-                <a href="{% url 'login' %}" class="nav-link nav-effect text-white"><i class="fas fa-sign-in-alt"></i> Войти</a>
-                <a href="{% url 'register' %}" class="nav-link nav-effect text-white"><i class="fas fa-user-plus"></i> Регистрация</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Войти</a>
+                <a href="{% url 'register' %}" class="btn btn-light btn-sm text-primary fw-bold"><i class="fa-solid fa-user-plus"></i> Регистрация</a>
             {% endif %}
+
+            <!-- Тумблер темы -->
+            <button id="theme-toggle" class="btn btn-outline-light btn-sm ms-2" title="Сменить тему">
+                <i class="fa-solid fa-moon"></i>
+            </button>
         </div>
     </div>
 </nav>
 
-<!-- Контент -->
-<main class="container" style="margin-top: 10px; margin-bottom: 50px; ">
-    <div class="d-flex justify-content-center">
-        <div class="w-100" style="max-width: 900px; text-align: center;">
-            {% block content %}
-            {% endblock %}
-        </div>
+<!-- ===== Main Content ===== -->
+<main class="main-content container d-flex justify-content-center align-items-center flex-column py-5">
+    <div class="content-wrapper w-100" style="max-width: 900px;">
+        {% block content %}
+        {% endblock %}
     </div>
 </main>
 
-<!-- Bootstrap JS -->
+<!-- ===== Footer ===== -->
+<footer class="footer mt-5 py-4 text-center small text-muted">
+    <div>© 2025 <strong>Postman HR</strong> — автоматизация найма с человеческим лицом и душой робота 🤖</div>
+</footer>
+
+<!-- Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Navbar Scroll Script -->
+<!-- ===== JS для тёмной темы ===== -->
 <script>
-document.addEventListener('scroll', function () {
-    const navbar = document.querySelector('.custom-navbar');
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('theme-toggle');
+    const icon = toggle.querySelector('i');
+    const body = document.body;
+
+    // Проверяем сохранённую тему
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.replace('light-mode', 'dark-mode');
+        icon.classList.replace('fa-moon', 'fa-sun');
     }
+
+    toggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        body.classList.toggle('light-mode');
+        icon.classList.toggle('fa-moon');
+        icon.classList.toggle('fa-sun');
+
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
 });
 </script>
-
 </body>
 </html>

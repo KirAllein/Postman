@@ -3,19 +3,21 @@
 {% block title %}Вакансии — Postman{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Вакансии</h1>
+<h1 class="mb-4 fw-bold text-primary">Вакансии</h1>
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+<div class="row justify-content-center g-4">
     {% for vacancy in vacancies %}
-    <div class="col">
-        <div class="card h-100 border-primary shadow-sm">
+    <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+        <div class="card h-100 w-100">
             <div class="card-body">
-                <h5 class="card-title text-primary">{{ vacancy.title }}</h5>
-                <p class="card-text">{{ vacancy.description|truncatewords:25 }}</p>
+                <h5 class="card-title text-primary fw-semibold">{{ vacancy.title }}</h5>
+                <p class="card-text text-secondary">{{ vacancy.description|truncatewords:25 }}</p>
             </div>
-            <div class="card-footer text-muted d-flex justify-content-between">
-                <span>Кандидатов: {{ vacancy.candidates.count }}</span>
-                <a href="{% url 'vacancy_detail' vacancy.id %}" class="btn btn-sm btn-outline-primary">Открыть</a>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <small class="text-muted">Кандидатов: {{ vacancy.candidates.count }}</small>
+                <a href="{% url 'vacancy_detail' vacancy.id %}" class="btn btn-sm btn-outline-primary">
+                    Открыть
+                </a>
             </div>
         </div>
     </div>
@@ -23,7 +25,8 @@
     <p>Пока нет вакансий.</p>
     {% endfor %}
 </div>
-<div class="d-flex justify-content-end mb-3">
+
+<div class="d-flex justify-content-end mt-4">
     <a href="{% url 'vacancy_create' %}" class="btn btn-outline-primary">
         <i class="fas fa-plus"></i> Добавить вакансию
     </a>

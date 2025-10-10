@@ -32,9 +32,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = SECRET_KEY_DJANGO
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = ['89.169.191.30', 'postmanvacancies.ru', 'www.postmanvacancies.ru', '127.0.0.1', 'localhost']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://postmanvacancies.ru',
+    'https://www.postmanvacancies.ru',
+]
 
 # Application definition
 
