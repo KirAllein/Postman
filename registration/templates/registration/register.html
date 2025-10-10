@@ -3,11 +3,63 @@
 {% block title %}Регистрация — Postman{% endblock %}
 
 {% block content %}
-<h1>Регистрация</h1>
-<form method="post" class="w-50">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success mt-2">Зарегистрироваться</button>
-</form>
-<p class="mt-3">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+<div class="register-container">
+    <div class="register-card shadow-lg p-4">
+        <h1 class="mb-4 text-gradient">Создать аккаунт</h1>
+
+        <form method="post" class="register-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">
+                        {{ field.label }}
+                    </label>
+                    <div class="input-group">
+                        {% if field.name == "username" %}
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                        {% elif field.name == "email" %}
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </span>
+                        {% elif field.name == "first_name" %}
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fa-solid fa-id-card"></i>
+                            </span>
+                        {% elif field.name == "last_name" %}
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </span>
+                        {% elif field.name == "company" %}
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fa-solid fa-building"></i>
+                            </span>
+                        {% elif "password" in field.name %}
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                        {% endif %}
+                        {{ field }}
+                    </div>
+
+                    {% for error in field.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-gold w-100 mt-2">
+                <i class="fa-solid fa-user-plus me-2"></i> Зарегистрироваться
+            </button>
+        </form>
+
+        <p class="mt-4">
+            Уже есть аккаунт?
+            <a href="{% url 'login' %}" class="text-gold fw-bold">Войти</a>
+        </p>
+    </div>
+</div>
+
 {% endblock %}
