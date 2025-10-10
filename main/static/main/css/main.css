@@ -349,3 +349,105 @@ body.dark-mode .register-form .input-group-text {
         padding: 10px;
     }
 }
+
+/* ==========================
+   Стили для страниц авторизации (login / register)
+   ========================== */
+
+/* Контейнер */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background: var(--bg-page);
+    padding: 20px;
+}
+
+/* Карточка формы */
+.auth-card {
+    background: var(--bg-card);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 215, 0, 0.25);
+    max-width: 420px;
+    width: 100%;
+    color: var(--text-main);
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Заголовок */
+.text-gradient {
+    background: linear-gradient(90deg, var(--gold), var(--accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Метки и поля */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.input-group .form-control {
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--text-main);
+    border: 1px solid #ccc;
+    transition: all 0.3s;
+}
+
+[data-theme="dark"] .input-group .form-control {
+    border: 1px solid #2e3b55;
+    background-color: #10182b;
+    color: #f0f0f0;
+}
+
+.input-group .form-control:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 5px var(--gold-light);
+}
+
+.input-group-text {
+    color: var(--accent);
+}
+
+/* Кнопка */
+.btn-gold {
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    color: #1a1a1a;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.btn-gold:hover {
+    background: linear-gradient(90deg, var(--gold-light), var(--gold));
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(255, 215, 0, 0.4);
+}
+
+/* Ссылки */
+.text-gold {
+    color: var(--gold);
+    transition: color 0.3s;
+}
+
+.text-gold:hover {
+    color: var(--gold-light);
+}
+
+p {
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/* Мобильная адаптация */
+@media (max-width: 600px) {
+    .auth-card {
+        padding: 20px;
+        max-width: 90%;
+    }
+}
